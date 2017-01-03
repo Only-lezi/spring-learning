@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--demo1   ioc入门 配置对象创建-->
+    <bean id="user" class="cn.blinkit.xmlConf.ioc.User"></bean>
+
+    <!--demo2   使用静态工厂创建对象-->
+    <bean id="bean" class="cn.blinkit.xmlConf.bean.BeanFactory" factory-method="getBean"></bean>
+
+    <!--demo2   使用实例工厂创建对象-->
+    <!-- 创建工厂对象 -->
+    <bean id="BeanFactory2" class="cn.blinkit.xmlConf.bean.BeanFactory2"></bean>
+    <bean id="bean2" factory-bean="BeanFactory2" factory-method="getBean"></bean>
+
+    <!--使用有参数的构造注入属性-->
+    <bean id="propertyDemo1" class="cn.blinkit.xmlConf.property.PropertyDemo1">
+        <!--使用有参构造注入-->
+        <constructor-arg name="username" value="张三"></constructor-arg>
+    </bean>
+
+    <!--使用set方法注入属性-->
+    <bean id="userSet" class="cn.blinkit.xmlConf.set.User">
+        <!--注入属性值
+            name属性值：类里面定义的属性名称
+            value属性：设置具体的值
+        -->
+        <property name="username" value="小芳"></property>
+    </bean>
+
+    <!--注入对象类型的属性-->
+    <!--1.配置service和dao对象-->
+    <bean id="userDao" class="cn.blinkit.xmlConf.object.UserDao"></bean>
+
+    <bean id="userService" class="cn.blinkit.xmlConf.object.UserService">
+        <!--注入dao对象
+            name属性值：service类里面属性名称
+            注：这里就不能写value属性，因为刚才是字符串，现在是对象
+            写ref属性：dao配置bean标签中id值
+        -->
+        <property name="userDao" ref="userDao"></property>
+    </bean>
+
+
+    <!--p名称空间注入-->
+    <bean id="person" class="cn.blinkit.xmlConf.pNameSpace.Person" p:pname="李四"></bean>
+
+
+    <!--注入复杂类型属性值-->
+    <bean id="complexType" class="cn.blinkit.xmlConf.complexType.ComplexType">
+        <!--数组-->
+        <property name="arrs">
+            <list>
+                <value>张三</value>
+                <value>李四</value>
+                <value>王五</value>
+            </list>
+        </property>
+
+        <!--list-->
+        <property name="list">
+            <list>
+                <value>list1</value>
+                <value>list2</value>
+                <value>list3</value>
+            </list>
+        </property>
+
+        <!--map-->
+        <property name="map">
+            <map>
+                <entry key="aa" value="小明"></entry>
+                <entry key="bb" value="小李"></entry>
+                <entry key="cc" value="小王"></entry>
+            </map>
+        </property>
+
+        <!--properties-->
+        <property name="properties">
+            <props>
+                <prop key="driverclass">com.mysql.jdbc.Driver</prop>
+                <prop key="username">root</prop>
+                <prop key="password">123456</prop>
+            </props>
+        </property>
+    </bean>
+
+</beans>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--
+        开启注解扫描：
+          （1）到包里面扫描类、方法、属性上面是否有注解
+        如果有多个包：
+          （1）可以加 逗号 进行分隔
+          （2）或者直接加入父包就可以了（建议这么写）
+    -->
+    <context:component-scan base-package="cn.blinkit.annotation"></context:component-scan>
+
+    <!--
+        扫描属性上面的注解(功能没有上面的强大，因此不用！！！)
+    -->
+    <!--<context:annotation-config></context:annotation-config>-->
+</beans>
