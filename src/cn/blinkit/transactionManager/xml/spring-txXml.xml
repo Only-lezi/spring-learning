@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--配置c3p0连接池-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <!--注入属性值-->
+        <property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+        <property name="jdbcUrl"
+                  value="jdbc:mysql:///spring_study?useUnicode=true&amp;characterEncoding=UTF8"></property>
+        <property name="user" value="root"></property>
+        <property name="password" value="123456"></property>
+    </bean>
+
+    <bean id="ordersService" class="cn.blinkit.transactionManager.xml.OrdersService">
+        <property name="ordersDao" ref="ordersDao"></property>
+    </bean>
+
+    <bean id="ordersDao" class="cn.blinkit.transactionManager.xml.OrdersDao">
+        <property name="jdbcTemplate" ref="jdbcTemplate"></property>
+    </bean>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <!--第一步配置事务管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!--注入dataSource-->
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <!--第二步配置事务增强-->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <!--做事务操作-->
+        <tx:attributes>
+            <!--设置进行事务操作的方法匹配规则-->
+            <tx:method name="account*" propagation="REQUIRED"/>
+            <!--<tx:method name="insert*"/>-->
+        </tx:attributes>
+    </tx:advice>
+
+    <!--第三步配置切面-->
+    <aop:config>
+        <aop:pointcut id="pointcut1" expression="execution(* cn.blinkit.transactionManager.xml.OrdersService.*(..))"></aop:pointcut>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="pointcut1"></aop:advisor>
+    </aop:config>
+</beans>
